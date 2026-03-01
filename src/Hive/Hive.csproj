@@ -1,0 +1,38 @@
+<Project Sdk="Uno.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-windows10.0.26100;net10.0-android;net10.0-ios;net10.0-maccatalyst;net10.0-browserwasm</TargetFrameworks>
+    <UnoSingleProject>true</UnoSingleProject>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Hive</RootNamespace>
+    <ApplicationTitle>Hive</ApplicationTitle>
+
+    <!-- WinUI -->
+    <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+
+    <!-- Android -->
+    <AndroidManifest Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">Platforms\Android\AndroidManifest.xml</AndroidManifest>
+
+    <!-- iOS / Mac Catalyst -->
+    <MtouchLink Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">SdkOnly</MtouchLink>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Uno.WinUI" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hive.Core\Hive.Core.csproj" />
+    <ProjectReference Include="..\Hive.Data\Hive.Data.csproj" />
+  </ItemGroup>
+
+  <!-- Font assets -->
+  <ItemGroup>
+    <Content Include="Assets\Fonts\*.ttf" />
+  </ItemGroup>
+
+</Project>

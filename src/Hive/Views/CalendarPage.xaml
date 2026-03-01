@@ -1,0 +1,139 @@
+<Page
+    x:Class="Hive.Views.CalendarPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Hive.Controls"
+    xmlns:converters="using:Hive.Converters"
+    Background="{StaticResource StoneBrush}">
+
+    <Page.Resources>
+        <converters:HexColorToBrushConverter x:Key="HexToBrush" />
+        <converters:HexColorToTintConverter x:Key="HexToTint" />
+        <converters:TimeFormatConverter x:Key="TimeFormat" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <converters:BoolToVisibilityConverter x:Key="InvertBoolToVis" Invert="True" />
+    </Page.Resources>
+
+    <Grid Padding="24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />  <!-- Header -->
+            <RowDefinition Height="Auto" />  <!-- View switcher + filters -->
+            <RowDefinition Height="*" />      <!-- Calendar content -->
+        </Grid.RowDefinitions>
+
+        <!-- ═══ Header ═══ -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                <Button Click="OnNavigateBackward" Style="{StaticResource SecondaryButtonStyle}"
+                        Padding="8,6" MinHeight="32" MinWidth="32">
+                    <FontIcon Glyph="&#xE76B;" FontSize="14" />
+                </Button>
+                <TextBlock x:Name="HeaderTitle"
+                           Style="{StaticResource PageTitleStyle}"
+                           VerticalAlignment="Center" />
+                <Button Click="OnNavigateForward" Style="{StaticResource SecondaryButtonStyle}"
+                        Padding="8,6" MinHeight="32" MinWidth="32">
+                    <FontIcon Glyph="&#xE76C;" FontSize="14" />
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                <Button Click="OnGoToToday" Style="{StaticResource SecondaryButtonStyle}"
+                        Content="Today" Padding="12,6" MinHeight="32" />
+                <Button x:Name="AddEventButton" Click="OnAddEvent" Style="{StaticResource FabStyle}"
+                        Width="40" Height="40" CornerRadius="20">
+                    <FontIcon Glyph="&#xE710;" FontSize="16" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- ═══ View Switcher + Profile Filter ═══ -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- View switcher -->
+            <Border Grid.Column="0" Background="{StaticResource SandBrush}" CornerRadius="8" Padding="4">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <Button x:Name="BtnSchedule" Click="OnViewSwitch" Tag="Schedule"
+                            Content="Schedule" Style="{StaticResource SecondaryButtonStyle}"
+                            Padding="10,4" MinHeight="28" FontSize="12" BorderThickness="0" />
+                    <Button x:Name="BtnDay" Click="OnViewSwitch" Tag="Day"
+                            Content="Day" Style="{StaticResource SecondaryButtonStyle}"
+                            Padding="10,4" MinHeight="28" FontSize="12" BorderThickness="0" />
+                    <Button x:Name="BtnWeek" Click="OnViewSwitch" Tag="Week"
+                            Content="Week" Style="{StaticResource SecondaryButtonStyle}"
+                            Padding="10,4" MinHeight="28" FontSize="12" BorderThickness="0" />
+                    <Button x:Name="BtnMonth" Click="OnViewSwitch" Tag="Month"
+                            Content="Month" Style="{StaticResource SecondaryButtonStyle}"
+                            Padding="10,4" MinHeight="28" FontSize="12" BorderThickness="0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Profile filter chips -->
+            <ItemsRepeater x:Name="ProfileFilterRepeater" Grid.Column="2">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Horizontal" Spacing="6" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <controls:ProfileChip />
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </Grid>
+
+        <!-- ═══ Calendar Content ═══ -->
+
+        <!-- Schedule View (default) -->
+        <controls:ScheduleView
+            x:Name="ScheduleViewControl"
+            Grid.Row="2"
+            x:Load="True" />
+
+        <!-- Week View -->
+        <controls:WeekGrid
+            x:Name="WeekViewControl"
+            Grid.Row="2"
+            x:Load="False" />
+
+        <!-- Month View -->
+        <controls:MonthGrid
+            x:Name="MonthViewControl"
+            Grid.Row="2"
+            x:Load="False" />
+
+        <!-- Empty State -->
+        <StackPanel Grid.Row="2"
+                    x:Name="EmptyState"
+                    Visibility="Collapsed"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="12">
+            <FontIcon Glyph="&#xE787;" FontSize="48" Foreground="{StaticResource TextTertiaryBrush}" />
+            <TextBlock Text="No events yet"
+                       Style="{StaticResource SectionHeadingStyle}"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="Tap + to add your first event"
+                       Style="{StaticResource BodySecondaryStyle}"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <!-- Loading -->
+        <ProgressRing x:Name="LoadingRing"
+                      Grid.Row="2"
+                      Visibility="Collapsed"
+                      IsActive="False"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Width="48" Height="48" />
+    </Grid>
+</Page>

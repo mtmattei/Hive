@@ -1,0 +1,129 @@
+<Page
+    x:Class="Hive.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Hive.Converters"
+    Background="{StaticResource StoneBrush}">
+
+    <Page.Resources>
+        <converters:HexColorToBrushConverter x:Key="HexToBrush" />
+    </Page.Resources>
+
+    <ScrollViewer Padding="24,20">
+        <StackPanel Spacing="24" MaxWidth="600">
+
+            <TextBlock Text="Settings" Style="{StaticResource PageTitleStyle}" />
+
+            <!-- ═══ Calendar Display ═══ -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Calendar Display" Style="{StaticResource SectionHeadingStyle}" />
+
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Start week on" Style="{StaticResource BodyStyle}"
+                                   VerticalAlignment="Center" />
+                        <ComboBox Grid.Column="1" x:Name="StartWeekCombo" Width="120"
+                                  SelectedIndex="{x:Bind ViewModel.StartWeekOnIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Sunday" />
+                            <ComboBoxItem Content="Monday" />
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Schedule view days" Style="{StaticResource BodyStyle}"
+                                   VerticalAlignment="Center" />
+                        <NumberBox Grid.Column="1" x:Name="ScheduleDaysBox" Width="80"
+                                   Minimum="1" Maximum="7" SpinButtonPlacementMode="Compact"
+                                   Value="{x:Bind ViewModel.ScheduleViewDays, Mode=TwoWay}" />
+                    </Grid>
+
+                    <ToggleSwitch Header="Start on current day"
+                                  IsOn="{x:Bind ViewModel.StartOnCurrentDay, Mode=TwoWay}" />
+
+                    <ToggleSwitch Header="Dim past events"
+                                  IsOn="{x:Bind ViewModel.DimPastEvents, Mode=TwoWay}" />
+
+                    <ToggleSwitch Header="Shade weekends"
+                                  IsOn="{x:Bind ViewModel.ShadeWeekends, Mode=TwoWay}" />
+
+                    <ToggleSwitch Header="Preview chores in calendar"
+                                  IsOn="{x:Bind ViewModel.PreviewChoresInCalendar, Mode=TwoWay}" />
+                </StackPanel>
+            </Border>
+
+            <!-- ═══ Parental Lock ═══ -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Parental Lock" Style="{StaticResource SectionHeadingStyle}" />
+                    <ToggleSwitch Header="Enable parental lock"
+                                  IsOn="{x:Bind ViewModel.ParentalLockEnabled, Mode=TwoWay}" />
+                    <TextBlock Text="When enabled, a PIN is required to add, edit, or delete content."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- ═══ Profiles ═══ -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Profiles" Style="{StaticResource SectionHeadingStyle}" />
+                        <Button Grid.Column="1" Click="OnAddProfile" Style="{StaticResource SecondaryButtonStyle}"
+                                Padding="10,4" MinHeight="28">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE710;" FontSize="12" />
+                                <TextBlock Text="Add" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <ItemsRepeater x:Name="ProfilesRepeater">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" Spacing="8" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8" ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16"
+                                            Background="{Binding Color, Converter={StaticResource HexToBrush}}">
+                                        <TextBlock Text="{Binding Emoji}" FontSize="14"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                               Style="{StaticResource BodySemiBoldStyle}"
+                                               VerticalAlignment="Center" />
+                                    <Button Grid.Column="2" Background="Transparent" BorderThickness="0"
+                                            Padding="4" MinWidth="0" MinHeight="0">
+                                        <FontIcon Glyph="&#xE712;" FontSize="14"
+                                                  Foreground="{StaticResource TextTertiaryBrush}" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+            </Border>
+
+            <!-- Save button -->
+            <Button Click="OnSave" Style="{StaticResource PrimaryButtonStyle}"
+                    Content="Save Settings" HorizontalAlignment="Stretch" />
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

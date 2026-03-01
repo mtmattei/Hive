@@ -1,0 +1,34 @@
+<UserControl
+    x:Class="Hive.Controls.TaskItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Single task row: emoji + title + star badge + checkbox -->
+    <Grid Padding="4,8" ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />  <!-- Emoji -->
+            <ColumnDefinition Width="*" />      <!-- Title -->
+            <ColumnDefinition Width="Auto" />  <!-- Stars -->
+            <ColumnDefinition Width="Auto" />  <!-- Checkbox -->
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" x:Name="EmojiText" FontSize="18"
+                   VerticalAlignment="Center" />
+
+        <TextBlock Grid.Column="1" x:Name="TitleText"
+                   Style="{StaticResource BodyStyle}"
+                   VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis" MaxLines="1" />
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
+                    x:Name="StarPanel" Visibility="Collapsed" VerticalAlignment="Center">
+            <TextBlock Text="⭐" FontSize="11" />
+            <TextBlock x:Name="StarText" Style="{StaticResource SmallLabelStyle}"
+                       Foreground="{StaticResource OchreBrush}" />
+        </StackPanel>
+
+        <CheckBox Grid.Column="3" x:Name="CompletionCheck"
+                  MinWidth="0" VerticalAlignment="Center"
+                  Click="OnCheckboxClick" />
+    </Grid>
+</UserControl>

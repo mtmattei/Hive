@@ -1,0 +1,87 @@
+<Page
+    x:Class="Hive.Views.RewardsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Hive.Converters"
+    Background="{StaticResource StoneBrush}">
+
+    <Page.Resources>
+        <converters:HexColorToBrushConverter x:Key="HexToBrush" />
+    </Page.Resources>
+
+    <Grid Padding="24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Rewards" Style="{StaticResource PageTitleStyle}" />
+            <Button Grid.Column="1" Click="OnAddReward" Style="{StaticResource FabStyle}"
+                    Width="40" Height="40" CornerRadius="20">
+                <FontIcon Glyph="&#xE710;" FontSize="16" />
+            </Button>
+        </Grid>
+
+        <!-- Per-profile reward sections -->
+        <ScrollViewer Grid.Row="1">
+            <ItemsRepeater x:Name="ProfileRewardsRepeater">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" Spacing="24" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Spacing="12">
+                            <!-- Profile header with star balance -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16"
+                                        Background="{Binding Color, Converter={StaticResource HexToBrush}}"
+                                        Margin="0,0,12,0">
+                                    <TextBlock Text="{Binding Name, Converter={StaticResource HexToBrush}}"
+                                               Foreground="White" FontSize="14" FontWeight="Bold"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                           Style="{StaticResource SectionHeadingStyle}"
+                                           VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                    <TextBlock Text="⭐" FontSize="16" />
+                                    <TextBlock Text="{Binding StarBalance}"
+                                               Style="{StaticResource BodySemiBoldStyle}"
+                                               Foreground="{StaticResource OchreBrush}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Reward cards placeholder -->
+                            <TextBlock Text="No rewards set up yet"
+                                       Style="{StaticResource BodySecondaryStyle}"
+                                       Margin="44,0,0,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Empty state -->
+        <StackPanel Grid.Row="1" x:Name="EmptyState" Visibility="Collapsed"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+            <FontIcon Glyph="&#xE734;" FontSize="48" Foreground="{StaticResource TextTertiaryBrush}" />
+            <TextBlock Text="No rewards yet" Style="{StaticResource SectionHeadingStyle}"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="Create rewards to motivate task completion"
+                       Style="{StaticResource BodySecondaryStyle}" HorizontalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</Page>
