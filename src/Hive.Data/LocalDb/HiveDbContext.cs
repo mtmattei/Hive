@@ -25,6 +25,10 @@ public class HiveDbContext : DbContext
     public DbSet<CalendarSettings> CalendarSettings => Set<CalendarSettings>();
     public DbSet<SharedAccess> SharedAccess => Set<SharedAccess>();
     public DbSet<Device> Devices => Set<Device>();
+    public DbSet<EventCountdown> EventCountdowns => Set<EventCountdown>();
+    public DbSet<PhotoAlbum> PhotoAlbums => Set<PhotoAlbum>();
+    public DbSet<Photo> Photos => Set<Photo>();
+    public DbSet<MagicImport> MagicImports => Set<MagicImport>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -161,6 +165,35 @@ public class HiveDbContext : DbContext
 
         // SyncedCalendar
         modelBuilder.Entity<SyncedCalendar>(e =>
+        {
+            e.HasKey(x => x.Id);
+        });
+
+        // EventCountdown
+        modelBuilder.Entity<EventCountdown>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.HasIndex(x => new { x.FamilyAccountId, x.TargetDate });
+            e.Ignore(x => x.DaysRemaining);
+            e.Ignore(x => x.IsToday);
+            e.Ignore(x => x.IsPast);
+        });
+
+        // PhotoAlbum
+        modelBuilder.Entity<PhotoAlbum>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.HasMany(x => x.Photos).WithOne(x => x.Album).HasForeignKey(x => x.AlbumId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Photo
+        modelBuilder.Entity<Photo>(e =>
+        {
+            e.HasKey(x => x.Id);
+        });
+
+        // MagicImport
+        modelBuilder.Entity<MagicImport>(e =>
         {
             e.HasKey(x => x.Id);
         });

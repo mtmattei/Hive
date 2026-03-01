@@ -53,6 +53,7 @@
     <SolidColorBrush x:Key="TerraLightBrush" Color="{StaticResource TerraLight}" />
     <SolidColorBrush x:Key="OliveBrush" Color="{StaticResource Olive}" />
     <SolidColorBrush x:Key="OchreBrush" Color="{StaticResource Ochre}" />
+    <SolidColorBrush x:Key="OchreTintBrush" Color="#FFF5E6D0" />
     <SolidColorBrush x:Key="PurpleBrush" Color="{StaticResource Purple}" />
     <SolidColorBrush x:Key="StoneBrush" Color="{StaticResource Stone}" />
     <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}" />

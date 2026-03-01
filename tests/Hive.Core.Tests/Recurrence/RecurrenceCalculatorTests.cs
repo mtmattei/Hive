@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Hive.Core.Models;
 using Hive.Core.Recurrence;
+using Xunit;
 
 namespace Hive.Core.Tests.Recurrence;
 

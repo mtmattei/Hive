@@ -46,6 +46,7 @@ public sealed partial class MainShell : UserControl
             "Calendar" => typeof(CalendarPage),
             "Tasks" => typeof(TasksPage),
             "Rewards" => typeof(RewardsPage),
+            "Meals" => typeof(MealPlanPage),
             "Lists" => typeof(ListsPage),
             "Settings" => typeof(SettingsPage),
             _ => typeof(CalendarPage),

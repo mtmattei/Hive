@@ -1,0 +1,22 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.PinEntryDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Enter PIN"
+    PrimaryButtonText="OK"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnConfirm">
+
+    <StackPanel Spacing="16" MinWidth="300">
+        <TextBlock x:Name="PromptText" Text="Enter your parental lock PIN to continue."
+                   Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+
+        <PasswordBox x:Name="PinInput" Header="PIN" MaxLength="6"
+                     PlaceholderText="4-6 digit PIN"
+                     AutomationProperties.Name="Parental lock PIN" />
+
+        <TextBlock x:Name="ErrorText" Text="" Foreground="{StaticResource TerraBrush}"
+                   FontSize="12" Visibility="Collapsed" />
+    </StackPanel>
+</ContentDialog>

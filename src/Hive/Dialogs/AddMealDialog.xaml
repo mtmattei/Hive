@@ -1,0 +1,37 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.AddMealDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add Meal"
+    PrimaryButtonText="Save"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <StackPanel Spacing="16" MinWidth="380">
+
+        <!-- Meal Category -->
+        <ComboBox x:Name="CategoryCombo" Header="Meal" SelectedIndex="0"
+                  HorizontalAlignment="Stretch">
+            <ComboBoxItem Content="Breakfast" />
+            <ComboBoxItem Content="Lunch" />
+            <ComboBoxItem Content="Dinner" />
+            <ComboBoxItem Content="Snack" />
+        </ComboBox>
+
+        <!-- Date -->
+        <CalendarDatePicker x:Name="DatePicker" Header="Date"
+                            HorizontalAlignment="Stretch" />
+
+        <!-- Choose existing recipe or custom name -->
+        <ComboBox x:Name="RecipeCombo" Header="Recipe (optional)"
+                  HorizontalAlignment="Stretch"
+                  DisplayMemberPath="Title"
+                  PlaceholderText="Select a recipe..." />
+
+        <!-- Custom meal name (if no recipe selected) -->
+        <TextBox x:Name="CustomNameInput" Header="Or type a meal name"
+                 PlaceholderText="e.g. Grilled chicken salad" />
+
+    </StackPanel>
+</ContentDialog>

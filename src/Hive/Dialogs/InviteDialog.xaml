@@ -1,0 +1,30 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.InviteDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Invite to Calendar"
+    PrimaryButtonText="Send Invite"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <StackPanel Spacing="16" MinWidth="360">
+
+        <TextBlock Text="Share access to your family calendar with a spouse, co-parent, or caregiver."
+                   Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+
+        <!-- Email -->
+        <TextBox x:Name="EmailInput" Header="Email address"
+                 PlaceholderText="name@example.com"
+                 AutomationProperties.Name="Invitee email" />
+
+        <!-- Role -->
+        <ComboBox x:Name="RoleCombo" Header="Permission level" SelectedIndex="1"
+                  HorizontalAlignment="Stretch">
+            <ComboBoxItem Content="Admin — Full control" />
+            <ComboBoxItem Content="Member — Add and edit" />
+            <ComboBoxItem Content="Viewer — View only" />
+        </ComboBox>
+
+    </StackPanel>
+</ContentDialog>

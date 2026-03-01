@@ -332,6 +332,86 @@ public static class SeedData
             },
         ]);
 
+        // ═══ Event Countdowns ═══
+        db.EventCountdowns.AddRange(
+        [
+            new EventCountdown
+            {
+                Id = Guid.NewGuid(), FamilyAccountId = FamilyId,
+                Title = "Summer Vacation", Emoji = "\U0001F3D6\uFE0F",
+                TargetDate = DateOnly.FromDateTime(DateTime.Today.AddDays(45)),
+            },
+            new EventCountdown
+            {
+                Id = Guid.NewGuid(), FamilyAccountId = FamilyId,
+                Title = "Emma's Birthday", Emoji = "\U0001F382",
+                TargetDate = DateOnly.FromDateTime(DateTime.Today.AddDays(30)),
+            },
+            new EventCountdown
+            {
+                Id = Guid.NewGuid(), FamilyAccountId = FamilyId,
+                Title = "Spring Break", Emoji = "\U0001F338",
+                TargetDate = DateOnly.FromDateTime(DateTime.Today.AddDays(14)),
+            },
+        ]);
+
+        // ═══ Recipes ═══
+        var recipeIds = new[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+
+        db.Recipes.AddRange(
+        [
+            new Recipe
+            {
+                Id = recipeIds[0], FamilyAccountId = FamilyId,
+                Title = "Pancakes", Category = MealCategory.Breakfast,
+                Description = "Fluffy buttermilk pancakes",
+                Ingredients = "2 cups flour\n2 eggs\n1.5 cups milk\n2 tbsp butter\n2 tbsp sugar\n1 tsp baking powder",
+                Instructions = "1. Mix dry ingredients\n2. Whisk wet ingredients\n3. Combine\n4. Cook on griddle until bubbles form",
+                CreatedAt = now,
+            },
+            new Recipe
+            {
+                Id = recipeIds[1], FamilyAccountId = FamilyId,
+                Title = "Grilled Chicken Salad", Category = MealCategory.Lunch,
+                Description = "Healthy grilled chicken salad",
+                Ingredients = "2 chicken breasts\nMixed greens\nCherry tomatoes\nCucumber\nBalsamic dressing",
+                Instructions = "1. Season and grill chicken\n2. Slice into strips\n3. Toss greens with veggies\n4. Top with chicken and dressing",
+                CreatedAt = now,
+            },
+            new Recipe
+            {
+                Id = recipeIds[2], FamilyAccountId = FamilyId,
+                Title = "Spaghetti Bolognese", Category = MealCategory.Dinner,
+                Description = "Classic meat sauce over spaghetti",
+                Ingredients = "1 lb ground beef\n1 jar marinara\n1 lb spaghetti\nOnion\nGarlic\nParmesan",
+                Instructions = "1. Brown beef with onion and garlic\n2. Add marinara, simmer 20 min\n3. Cook pasta al dente\n4. Serve with parmesan",
+                CreatedAt = now,
+            },
+            new Recipe
+            {
+                Id = recipeIds[3], FamilyAccountId = FamilyId,
+                Title = "Apple Slices & PB", Category = MealCategory.Snack,
+                Description = "Quick healthy snack",
+                Ingredients = "2 apples\nPeanut butter",
+                Instructions = "1. Slice apples\n2. Serve with peanut butter for dipping",
+                CreatedAt = now,
+            },
+        ]);
+
+        // ═══ Meal Plan (this week) ═══
+        var weekStart = DateOnly.FromDateTime(DateTime.Today).AddDays(-(int)DateTime.Today.DayOfWeek);
+
+        db.MealPlanEntries.AddRange(
+        [
+            new MealPlanEntry { Id = Guid.NewGuid(), FamilyAccountId = FamilyId, Date = weekStart, Category = MealCategory.Breakfast, RecipeId = recipeIds[0], CustomMealName = "Pancakes" },
+            new MealPlanEntry { Id = Guid.NewGuid(), FamilyAccountId = FamilyId, Date = weekStart, Category = MealCategory.Dinner, RecipeId = recipeIds[2], CustomMealName = "Spaghetti Bolognese" },
+            new MealPlanEntry { Id = Guid.NewGuid(), FamilyAccountId = FamilyId, Date = weekStart.AddDays(1), Category = MealCategory.Lunch, RecipeId = recipeIds[1], CustomMealName = "Grilled Chicken Salad" },
+            new MealPlanEntry { Id = Guid.NewGuid(), FamilyAccountId = FamilyId, Date = weekStart.AddDays(1), Category = MealCategory.Snack, RecipeId = recipeIds[3], CustomMealName = "Apple Slices & PB" },
+            new MealPlanEntry { Id = Guid.NewGuid(), FamilyAccountId = FamilyId, Date = weekStart.AddDays(2), Category = MealCategory.Breakfast, CustomMealName = "Cereal & fruit" },
+            new MealPlanEntry { Id = Guid.NewGuid(), FamilyAccountId = FamilyId, Date = weekStart.AddDays(2), Category = MealCategory.Dinner, CustomMealName = "Tacos" },
+            new MealPlanEntry { Id = Guid.NewGuid(), FamilyAccountId = FamilyId, Date = weekStart.AddDays(3), Category = MealCategory.Dinner, CustomMealName = "Pizza night" },
+        ]);
+
         await db.SaveChangesAsync();
     }
 }

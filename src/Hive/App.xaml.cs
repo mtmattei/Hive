@@ -82,6 +82,13 @@ public partial class App : Application
         services.AddTransient<ISyncService, IcsCalendarSyncService>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<ThemeService>();
+        services.AddTransient<IMealPlanService, MealPlanService>();
+        services.AddTransient<ISharedAccessService, SharedAccessService>();
+        services.AddTransient<IDeviceService, DeviceService>();
+        services.AddTransient<ICountdownService, CountdownService>();
+        services.AddTransient<IPhotoService, PhotoService>();
+        services.AddTransient<IMagicImportService, MagicImportService>();
+        services.AddSingleton<IWeatherService, WeatherService>();
 
         // ViewModels
         services.AddTransient<CalendarViewModel>();
@@ -89,5 +96,6 @@ public partial class App : Application
         services.AddTransient<RewardsViewModel>();
         services.AddTransient<ListsViewModel>();
         services.AddTransient<SettingsViewModel>();
+        services.AddTransient<MealPlanViewModel>();
     }
 }

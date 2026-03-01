@@ -1,0 +1,43 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.AddRecipeDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add Recipe"
+    PrimaryButtonText="Save"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <ScrollViewer MaxHeight="500">
+        <StackPanel Spacing="16" MinWidth="400">
+
+            <!-- Title -->
+            <TextBox x:Name="TitleInput" Header="Recipe name"
+                     PlaceholderText="e.g. Spaghetti Bolognese" />
+
+            <!-- Category -->
+            <ComboBox x:Name="CategoryCombo" Header="Category" SelectedIndex="2"
+                      HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="Breakfast" />
+                <ComboBoxItem Content="Lunch" />
+                <ComboBoxItem Content="Dinner" />
+                <ComboBoxItem Content="Snack" />
+            </ComboBox>
+
+            <!-- Description -->
+            <TextBox x:Name="DescriptionInput" Header="Description"
+                     PlaceholderText="Brief description" />
+
+            <!-- Ingredients -->
+            <TextBox x:Name="IngredientsInput" Header="Ingredients"
+                     PlaceholderText="One ingredient per line"
+                     AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" />
+
+            <!-- Instructions -->
+            <TextBox x:Name="InstructionsInput" Header="Instructions"
+                     PlaceholderText="Step-by-step directions"
+                     AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" />
+
+        </StackPanel>
+    </ScrollViewer>
+</ContentDialog>

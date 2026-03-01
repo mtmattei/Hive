@@ -43,6 +43,18 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                <!-- Weather + Countdowns -->
+                <Border x:Name="WeatherBadge" Background="{StaticResource SandBrush}"
+                        CornerRadius="8" Padding="10,4" Visibility="Collapsed"
+                        VerticalAlignment="Center">
+                    <TextBlock x:Name="WeatherText" FontSize="12" />
+                </Border>
+                <Border x:Name="CountdownBadge" Background="{StaticResource OchreTintBrush}"
+                        CornerRadius="8" Padding="10,4" Visibility="Collapsed"
+                        VerticalAlignment="Center">
+                    <TextBlock x:Name="CountdownText" FontSize="12" />
+                </Border>
+
                 <Button Click="OnGoToToday" Style="{StaticResource SecondaryButtonStyle}"
                         Content="Today" Padding="12,6" MinHeight="32" />
                 <Button x:Name="AddEventButton" Click="OnAddEvent" Style="{StaticResource FabStyle}"

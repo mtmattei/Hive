@@ -59,20 +59,37 @@
                     </Grid>
 
                     <ToggleSwitch Header="Start on current day"
-                                  IsOn="{x:Bind ViewModel.StartOnCurrentDay, Mode=TwoWay}"
-                                  AutomationProperties.Name="Start on current day" />
-
+                                  IsOn="{x:Bind ViewModel.StartOnCurrentDay, Mode=TwoWay}" />
                     <ToggleSwitch Header="Dim past events"
-                                  IsOn="{x:Bind ViewModel.DimPastEvents, Mode=TwoWay}"
-                                  AutomationProperties.Name="Dim past events" />
-
+                                  IsOn="{x:Bind ViewModel.DimPastEvents, Mode=TwoWay}" />
                     <ToggleSwitch Header="Shade weekends"
-                                  IsOn="{x:Bind ViewModel.ShadeWeekends, Mode=TwoWay}"
-                                  AutomationProperties.Name="Shade weekends" />
-
+                                  IsOn="{x:Bind ViewModel.ShadeWeekends, Mode=TwoWay}" />
                     <ToggleSwitch Header="Preview chores in calendar"
-                                  IsOn="{x:Bind ViewModel.PreviewChoresInCalendar, Mode=TwoWay}"
-                                  AutomationProperties.Name="Preview chores in calendar" />
+                                  IsOn="{x:Bind ViewModel.PreviewChoresInCalendar, Mode=TwoWay}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Sleep Mode -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Sleep Mode" Style="{StaticResource SectionHeadingStyle}" />
+                    <TextBlock Text="Set a schedule for the screen to sleep and wake automatically."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <ToggleSwitch Header="Enable sleep schedule"
+                                  IsOn="{x:Bind ViewModel.SleepScheduleEnabled, Mode=TwoWay}"
+                                  AutomationProperties.Name="Enable sleep schedule" />
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TimePicker Grid.Column="0" Header="Sleep at"
+                                    Time="{x:Bind ViewModel.SleepFromTime, Mode=TwoWay}"
+                                    AutomationProperties.Name="Sleep start time" />
+                        <TimePicker Grid.Column="1" Header="Wake at"
+                                    Time="{x:Bind ViewModel.SleepToTime, Mode=TwoWay}"
+                                    AutomationProperties.Name="Sleep end time" />
+                    </Grid>
                 </StackPanel>
             </Border>
 
@@ -82,9 +99,69 @@
                     <TextBlock Text="Parental Lock" Style="{StaticResource SectionHeadingStyle}" />
                     <ToggleSwitch Header="Enable parental lock"
                                   IsOn="{x:Bind ViewModel.ParentalLockEnabled, Mode=TwoWay}"
+                                  Toggled="OnParentalLockToggled"
                                   AutomationProperties.Name="Enable parental lock" />
                     <TextBlock Text="When enabled, a PIN is required to add, edit, or delete content."
                                Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <Button Click="OnSetPin" Style="{StaticResource SecondaryButtonStyle}"
+                            Padding="16,8" Content="Set / Change PIN"
+                            AutomationProperties.Name="Set parental lock PIN" />
+                </StackPanel>
+            </Border>
+
+            <!-- Event Countdowns -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Event Countdowns" Style="{StaticResource SectionHeadingStyle}" />
+                        <Button Grid.Column="1" Click="OnAddCountdown" Style="{StaticResource SecondaryButtonStyle}"
+                                Padding="10,4" MinHeight="28">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE710;" FontSize="12" />
+                                <TextBlock Text="Add" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <TextBlock Text="Build excitement for upcoming events with countdown badges."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <ItemsRepeater x:Name="CountdownsRepeater">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" Spacing="6" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8" ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Emoji}" FontSize="18"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Title}"
+                                               Style="{StaticResource BodySemiBoldStyle}"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" FontSize="13"
+                                               VerticalAlignment="Center"
+                                               Foreground="{StaticResource SeaBrush}">
+                                        <Run Text="{Binding DaysRemaining}" />
+                                        <Run Text=" days" />
+                                    </TextBlock>
+                                    <Button Grid.Column="3" Click="OnDeleteCountdown" Tag="{Binding Id}"
+                                            Background="Transparent" BorderThickness="0" Padding="4"
+                                            MinWidth="0" MinHeight="0">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="12"
+                                                  Foreground="{StaticResource TextTertiaryBrush}" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
                 </StackPanel>
             </Border>
 
@@ -94,25 +171,164 @@
                     <TextBlock Text="Calendar Sync" Style="{StaticResource SectionHeadingStyle}" />
                     <TextBlock Text="Import events from an external calendar via ICS URL."
                                Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
-
                     <TextBox x:Name="IcsUrlInput" Header="ICS Feed URL"
                              PlaceholderText="https://calendar.google.com/..."
                              Text="{x:Bind ViewModel.SyncIcsUrl, Mode=TwoWay}"
                              AutomationProperties.Name="ICS feed URL" />
-
-                    <Button Click="OnSyncIcs" Style="{StaticResource SecondaryButtonStyle}"
-                            Padding="16,8"
-                            AutomationProperties.Name="Sync calendar feed">
+                    <Button Click="OnSyncIcs" Style="{StaticResource SecondaryButtonStyle}" Padding="16,8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE72C;" FontSize="14" />
                             <TextBlock Text="Sync Now" FontSize="13" />
                         </StackPanel>
                     </Button>
+                    <TextBlock Text="{x:Bind ViewModel.SyncStatusMessage, Mode=OneWay}"
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
 
-                    <TextBlock x:Name="SyncStatus"
-                               Text="{x:Bind ViewModel.SyncStatusMessage, Mode=OneWay}"
-                               Style="{StaticResource BodySecondaryStyle}"
-                               TextWrapping="Wrap" />
+            <!-- Magic Import -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Magic Import" Style="{StaticResource SectionHeadingStyle}" />
+                    <TextBlock Text="Paste text from emails, flyers, or school newsletters to auto-create events."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <TextBox x:Name="ImportTextInput" Header="Paste content"
+                             PlaceholderText="e.g. Science Fair - March 15, 2026 at 6pm&#x0a;Parent Night - April 2, 2026"
+                             Text="{x:Bind ViewModel.ImportText, Mode=TwoWay}"
+                             AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80"
+                             AutomationProperties.Name="Import text content" />
+                    <Button Click="OnRunImport" Style="{StaticResource SecondaryButtonStyle}" Padding="16,8">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE8B5;" FontSize="14" />
+                            <TextBlock Text="Import Events" FontSize="13" />
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text="{x:Bind ViewModel.ImportStatusMessage, Mode=OneWay}"
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Share Access -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Share Access" Style="{StaticResource SectionHeadingStyle}" />
+                        <Button Grid.Column="1" Click="OnInvite" Style="{StaticResource SecondaryButtonStyle}"
+                                Padding="10,4" MinHeight="28">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE77B;" FontSize="12" />
+                                <TextBlock Text="Invite" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <TextBlock Text="Invite your spouse, co-parent, or caregivers to access your calendar."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <ItemsRepeater x:Name="SharedAccessRepeater">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" Spacing="6" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8" ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding InviteeEmail}"
+                                                   Style="{StaticResource BodySemiBoldStyle}" />
+                                        <TextBlock Text="{Binding Role}"
+                                                   Style="{StaticResource BodySecondaryStyle}" FontSize="11" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" FontSize="11" VerticalAlignment="Center"
+                                               Foreground="{StaticResource OliveBrush}"
+                                               Text="{Binding Accepted}" />
+                                    <Button Grid.Column="2" Click="OnRevokeAccess" Tag="{Binding Id}"
+                                            Background="Transparent" BorderThickness="0" Padding="4"
+                                            MinWidth="0" MinHeight="0">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="12"
+                                                  Foreground="{StaticResource TextTertiaryBrush}" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+            </Border>
+
+            <!-- Device Linking -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Linked Devices" Style="{StaticResource SectionHeadingStyle}" />
+                        <Button Grid.Column="1" Click="OnAddDevice" Style="{StaticResource SecondaryButtonStyle}"
+                                Padding="10,4" MinHeight="28">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE710;" FontSize="12" />
+                                <TextBlock Text="Add" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <TextBlock Text="Connect multiple calendars across rooms or households."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <ItemsRepeater x:Name="DevicesRepeater">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Vertical" Spacing="6" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="8" ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Grid.Column="0" Glyph="&#xE7F4;" FontSize="18"
+                                              Foreground="{StaticResource SeaBrush}" VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="{Binding DisplayName}"
+                                                   Style="{StaticResource BodySemiBoldStyle}" />
+                                        <TextBlock Text="{Binding ActivationCode}"
+                                                   Style="{StaticResource BodySecondaryStyle}" FontSize="11" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" FontSize="11" VerticalAlignment="Center"
+                                               Foreground="{StaticResource OliveBrush}"
+                                               Text="{Binding IsActivated}" />
+                                    <Button Grid.Column="3" Click="OnDeleteDevice" Tag="{Binding Id}"
+                                            Background="Transparent" BorderThickness="0" Padding="4"
+                                            MinWidth="0" MinHeight="0">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="12"
+                                                  Foreground="{StaticResource TextTertiaryBrush}" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+            </Border>
+
+            <!-- Photo Screensaver -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Photo Screensaver" Style="{StaticResource SectionHeadingStyle}" />
+                    <TextBlock Text="Display favorite photos when the calendar isn't in use. Organize photos into albums."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <Button Click="OnManagePhotos" Style="{StaticResource SecondaryButtonStyle}" Padding="16,8">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE8B9;" FontSize="14" />
+                            <TextBlock Text="Manage Albums" FontSize="13" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Border>
 
@@ -126,8 +342,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Profiles" Style="{StaticResource SectionHeadingStyle}" />
                         <Button Grid.Column="1" Click="OnAddProfile" Style="{StaticResource SecondaryButtonStyle}"
-                                Padding="10,4" MinHeight="28"
-                                AutomationProperties.Name="Add profile">
+                                Padding="10,4" MinHeight="28">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <FontIcon Glyph="&#xE710;" FontSize="12" />
                                 <TextBlock Text="Add" FontSize="12" />
@@ -157,8 +372,7 @@
                                                VerticalAlignment="Center" />
                                     <Button Grid.Column="2" Click="OnViewProfile" Tag="{Binding}"
                                             Background="Transparent" BorderThickness="0"
-                                            Padding="4" MinWidth="0" MinHeight="0"
-                                            AutomationProperties.Name="View profile details">
+                                            Padding="4" MinWidth="0" MinHeight="0">
                                         <FontIcon Glyph="&#xE76C;" FontSize="14"
                                                   Foreground="{StaticResource TextTertiaryBrush}" />
                                     </Button>
@@ -166,6 +380,21 @@
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>
+                </StackPanel>
+            </Border>
+
+            <!-- Grocery / Instacart -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Grocery Shopping" Style="{StaticResource SectionHeadingStyle}" />
+                    <TextBlock Text="Send your grocery list items to Instacart for quick ordering."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+                    <Button Click="OnSendToInstacart" Style="{StaticResource SecondaryButtonStyle}" Padding="16,8">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE7BF;" FontSize="14" />
+                            <TextBlock Text="Open in Instacart" FontSize="13" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Border>
 

@@ -1,4 +1,5 @@
 using Hive.Core.Models;
+using Hive.Core.Services;
 using Hive.Dialogs;
 using Hive.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,40 @@ public sealed partial class CalendarPage : Page
         base.OnNavigatedTo(e);
         await ViewModel.InitializeAsync();
         UpdateUI();
+        _ = LoadWeatherAsync();
+        _ = LoadCountdownsAsync();
+    }
+
+    private async Task LoadWeatherAsync()
+    {
+        try
+        {
+            var weatherService = App.Services.GetRequiredService<IWeatherService>();
+            var forecast = await weatherService.GetCurrentAsync("New York");
+            if (forecast is not null)
+            {
+                WeatherText.Text = $"{forecast.Icon} {forecast.TempCurrentF}\u00B0F {forecast.Condition}";
+                WeatherBadge.Visibility = Visibility.Visible;
+            }
+        }
+        catch { /* Weather is non-critical */ }
+    }
+
+    private async Task LoadCountdownsAsync()
+    {
+        try
+        {
+            var countdownService = App.Services.GetRequiredService<ICountdownService>();
+            var countdowns = await countdownService.GetCountdownsAsync(
+                Guid.Parse("00000000-0000-0000-0000-000000000001"));
+            var next = countdowns.Where(c => c.DaysRemaining >= 0).OrderBy(c => c.DaysRemaining).FirstOrDefault();
+            if (next is not null)
+            {
+                CountdownText.Text = $"{next.Emoji} {next.Title}: {next.DaysRemaining}d";
+                CountdownBadge.Visibility = Visibility.Visible;
+            }
+        }
+        catch { /* Countdown is non-critical */ }
     }
 
     private void OnViewSwitch(object sender, RoutedEventArgs e)

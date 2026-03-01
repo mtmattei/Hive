@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hive.Core.Models;
@@ -107,7 +108,7 @@ public partial class ListsViewModel : ObservableObject
         SelectedList?.Items
             .Where(i => ShowCompleted || !i.IsCompleted)
             .OrderBy(i => i.IsCompleted)
-            .ThenBy(i => i.SortOrder) ?? [];
+            .ThenBy(i => i.SortOrder) ?? Enumerable.Empty<ListItem>();
 
     public async Task CreateListAsync(CustomList list)
     {

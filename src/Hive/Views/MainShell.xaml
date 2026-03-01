@@ -77,6 +77,14 @@
                         </StackPanel>
                     </Button>
 
+                    <Button x:Name="NavMeals" Click="OnNavClick" Tag="Meals"
+                            Style="{StaticResource NavItemStyle}" Foreground="#AAFFFFFF">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <FontIcon Glyph="&#xE799;" FontSize="18" />
+                            <TextBlock Text="Meals" FontSize="14" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Button>
+
                     <Button x:Name="NavLists" Click="OnNavClick" Tag="Lists"
                             Style="{StaticResource NavItemStyle}" Foreground="#AAFFFFFF">
                         <StackPanel Orientation="Horizontal" Spacing="12">
