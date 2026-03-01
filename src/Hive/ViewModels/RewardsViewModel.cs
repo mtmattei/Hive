@@ -51,7 +51,6 @@ public partial class RewardsViewModel : ObservableObject
             var rewards = await _rewardService.GetRewardsAsync(_familyAccountId);
             Rewards = new ObservableCollection<Reward>(rewards);
 
-            // Refresh profile star balances
             var profiles = await _profileService.GetProfilesAsync(_familyAccountId);
             Profiles = new ObservableCollection<Profile>(profiles);
 
@@ -106,6 +105,27 @@ public partial class RewardsViewModel : ObservableObject
         }).ToList();
 
         await _rewardService.CreateRewardAsync(reward);
+        await LoadRewardsAsync();
+    }
+
+    public async Task UpdateRewardAsync(Reward reward, IReadOnlyList<Guid> profileIds)
+    {
+        reward.FamilyAccountId = _familyAccountId;
+        reward.EligibleProfiles = profileIds.Select(pid => new RewardEligibility
+        {
+            Id = Guid.NewGuid(),
+            RewardId = reward.Id,
+            ProfileId = pid,
+        }).ToList();
+
+        await _rewardService.UpdateRewardAsync(reward);
+        await LoadRewardsAsync();
+    }
+
+    [RelayCommand]
+    private async Task DeleteRewardAsync(Guid rewardId)
+    {
+        await _rewardService.DeleteRewardAsync(rewardId);
         await LoadRewardsAsync();
     }
 }

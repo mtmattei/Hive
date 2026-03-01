@@ -10,6 +10,11 @@
                 <ResourceDictionary Source="ms-appx:///Styles/Typography.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/SharedStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark"
+                                    Source="ms-appx:///Styles/DarkColors.xaml" />
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 

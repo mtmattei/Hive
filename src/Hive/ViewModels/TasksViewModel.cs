@@ -80,12 +80,10 @@ public partial class TasksViewModel : ObservableObject
             await _taskService.CompleteTaskAsync(
                 request.TaskId, request.ProfileId, SelectedDate, request.TimeOfDay);
 
-            // Check for celebration
             if (await _taskService.AreAllTasksCompleteAsync(
                 _familyAccountId, request.ProfileId, SelectedDate))
             {
                 ShowCelebration = true;
-                // Auto-hide after animation
                 _ = Task.Delay(2000).ContinueWith(_ => ShowCelebration = false);
             }
         }
@@ -116,6 +114,27 @@ public partial class TasksViewModel : ObservableObject
         }).ToList();
 
         await _taskService.CreateTaskAsync(task);
+        await LoadTasksAsync();
+    }
+
+    public async Task UpdateTaskAsync(TaskItem task, IReadOnlyList<Guid> profileIds)
+    {
+        task.FamilyAccountId = _familyAccountId;
+        task.Assignments = profileIds.Select(pid => new TaskAssignment
+        {
+            Id = Guid.NewGuid(),
+            TaskItemId = task.Id,
+            ProfileId = pid,
+        }).ToList();
+
+        await _taskService.UpdateTaskAsync(task);
+        await LoadTasksAsync();
+    }
+
+    [RelayCommand]
+    private async Task DeleteTaskAsync(Guid taskId)
+    {
+        await _taskService.DeleteTaskAsync(taskId);
         await LoadTasksAsync();
     }
 }

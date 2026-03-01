@@ -18,7 +18,8 @@
         <TextBlock Grid.Column="1" x:Name="TitleText"
                    Style="{StaticResource BodyStyle}"
                    VerticalAlignment="Center"
-                   TextTrimming="CharacterEllipsis" MaxLines="1" />
+                   TextTrimming="CharacterEllipsis" MaxLines="1"
+                   Tapped="OnTitleTapped" />
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
                     x:Name="StarPanel" Visibility="Collapsed" VerticalAlignment="Center">

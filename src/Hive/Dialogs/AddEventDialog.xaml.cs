@@ -7,8 +7,10 @@ namespace Hive.Dialogs;
 public sealed partial class AddEventDialog : ContentDialog
 {
     private readonly IReadOnlyList<Profile> _profiles;
+    private Guid? _editingEventId;
 
     public CalendarEvent? Result { get; private set; }
+    public bool IsEditing => _editingEventId.HasValue;
 
     public AddEventDialog(IReadOnlyList<Profile> profiles, DateTimeOffset? defaultDate = null)
     {
@@ -25,12 +27,11 @@ public sealed partial class AddEventDialog : ContentDialog
         EndTimePicker.Time = new TimeSpan(date.Hour + 1, 0, 0);
     }
 
-    /// <summary>
-    /// Pre-populate for editing an existing event.
-    /// </summary>
     public void LoadEvent(CalendarEvent evt)
     {
+        _editingEventId = evt.Id;
         Title = "Edit Event";
+        PrimaryButtonText = "Save";
         TitleInput.Text = evt.Title;
         AllDayToggle.IsOn = evt.IsAllDay;
         DatePicker.Date = evt.StartTime;
@@ -94,7 +95,7 @@ public sealed partial class AddEventDialog : ContentDialog
 
         Result = new CalendarEvent
         {
-            Id = Guid.NewGuid(),
+            Id = _editingEventId ?? Guid.NewGuid(),
             FamilyAccountId = profile.FamilyAccountId,
             Title = TitleInput.Text.Trim(),
             StartTime = startTime,

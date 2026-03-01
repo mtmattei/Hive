@@ -27,6 +27,7 @@ public sealed partial class RewardCard : UserControl
     }
 
     public event EventHandler<Reward>? RedeemClicked;
+    public event EventHandler<Reward>? EditClicked;
 
     public RewardCard()
     {
@@ -54,7 +55,7 @@ public sealed partial class RewardCard : UserControl
             ? Math.Min(1.0, (double)StarBalance / Reward.StarCost)
             : 0;
 
-        ProgressFill.Width = progress * 200; // approximate
+        ProgressFill.Width = progress * 200;
         ProgressText.Text = $"{StarBalance} / {Reward.StarCost}";
         RedeemButton.IsEnabled = StarBalance >= Reward.StarCost;
     }

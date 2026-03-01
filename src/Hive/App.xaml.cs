@@ -1,10 +1,12 @@
 using Hive.Core.Services;
 using Hive.Data.LocalDb;
 using Hive.Data.Repositories;
+using Hive.Services;
 using Hive.ViewModels;
 using Hive.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 
 namespace Hive;
@@ -12,6 +14,7 @@ namespace Hive;
 public partial class App : Application
 {
     public static IServiceProvider Services { get; private set; } = null!;
+    public static Window? MainWindow { get; private set; }
 
     private Window? _window;
 
@@ -34,18 +37,37 @@ public partial class App : Application
             SeedData.SeedAsync(db).GetAwaiter().GetResult();
         }
 
+        // Initialize theme
+        var themeService = Services.GetRequiredService<ThemeService>();
+        themeService.Initialize();
+
         _window = new Window();
+        MainWindow = _window;
 
 #if DEBUG
-        _window.Title = "Hive — Family Calendar";
+        _window.Title = "Hive \u2014 Family Calendar";
 #endif
 
         _window.Content = new MainShell();
+
+        // Apply saved theme
+        if (_window.Content is FrameworkElement root)
+            root.RequestedTheme = themeService.CurrentTheme;
+
         _window.Activate();
     }
 
     private static void ConfigureServices(IServiceCollection services)
     {
+        // Logging
+        services.AddLogging(builder =>
+        {
+            builder.SetMinimumLevel(LogLevel.Information);
+#if DEBUG
+            builder.AddDebug();
+#endif
+        });
+
         // Database
         services.AddDbContext<HiveDbContext>(options =>
             options.UseSqlite("Data Source=hive.db"));
@@ -57,6 +79,9 @@ public partial class App : Application
         services.AddTransient<IRewardService, RewardService>();
         services.AddTransient<IListService, ListService>();
         services.AddTransient<ISettingsService, SettingsService>();
+        services.AddTransient<ISyncService, IcsCalendarSyncService>();
+        services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<ThemeService>();
 
         // ViewModels
         services.AddTransient<CalendarViewModel>();

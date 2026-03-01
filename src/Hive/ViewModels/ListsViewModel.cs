@@ -95,6 +95,14 @@ public partial class ListsViewModel : ObservableObject
         ShowCompleted = !ShowCompleted;
     }
 
+    [RelayCommand]
+    private async Task DeleteListAsync(Guid listId)
+    {
+        await _listService.DeleteListAsync(listId);
+        SelectedList = null;
+        await LoadListsAsync();
+    }
+
     public IEnumerable<ListItem> VisibleItems =>
         SelectedList?.Items
             .Where(i => ShowCompleted || !i.IsCompleted)

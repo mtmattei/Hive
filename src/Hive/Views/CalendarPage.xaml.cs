@@ -1,3 +1,4 @@
+using Hive.Core.Models;
 using Hive.Dialogs;
 using Hive.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,9 +70,43 @@ public sealed partial class CalendarPage : Page
         }
     }
 
+    public async void OnEditEvent(CalendarEvent evt)
+    {
+        var dialog = new AddEventDialog(ViewModel.Profiles.ToList(), evt.StartTime)
+        {
+            XamlRoot = XamlRoot,
+        };
+        dialog.LoadEvent(evt);
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary && dialog.Result is not null)
+        {
+            await ViewModel.UpdateEventAsync(dialog.Result);
+            UpdateUI();
+        }
+    }
+
+    public async void OnDeleteEvent(CalendarEvent evt)
+    {
+        var confirm = new ContentDialog
+        {
+            Title = "Delete Event",
+            Content = $"Delete \"{evt.Title}\"? This cannot be undone.",
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = XamlRoot,
+        };
+
+        if (await confirm.ShowAsync() == ContentDialogResult.Primary)
+        {
+            await ViewModel.DeleteEventCommand.ExecuteAsync(evt.Id);
+            UpdateUI();
+        }
+    }
+
     private void UpdateUI()
     {
-        // Update header title
         HeaderTitle.Text = ViewModel.CurrentView switch
         {
             CalendarViewMode.Day => ViewModel.SelectedDate.ToString("dddd, MMMM d"),
@@ -81,26 +116,21 @@ public sealed partial class CalendarPage : Page
             _ => ViewModel.SelectedDate.ToString("MMMM yyyy"),
         };
 
-        // State visibility
         LoadingRing.Visibility = ViewModel.State == ViewState.Loading ? Visibility.Visible : Visibility.Collapsed;
         LoadingRing.IsActive = ViewModel.State == ViewState.Loading;
         EmptyState.Visibility = ViewModel.State == ViewState.Empty ? Visibility.Visible : Visibility.Collapsed;
 
-        // Profile filter
         ProfileFilterRepeater.ItemsSource = ViewModel.Profiles;
 
-        // View switching — bind data to the active view control
         var isSchedule = ViewModel.CurrentView == CalendarViewMode.Schedule;
         var isWeek = ViewModel.CurrentView == CalendarViewMode.Week;
         var isMonth = ViewModel.CurrentView == CalendarViewMode.Month;
-        // Day view reuses ScheduleView with DayCount=1
 
         ScheduleViewControl.Visibility = (isSchedule || ViewModel.CurrentView == CalendarViewMode.Day)
             ? Visibility.Visible : Visibility.Collapsed;
         WeekViewControl.Visibility = isWeek ? Visibility.Visible : Visibility.Collapsed;
         MonthViewControl.Visibility = isMonth ? Visibility.Visible : Visibility.Collapsed;
 
-        // Bind data to active view
         if (isSchedule || ViewModel.CurrentView == CalendarViewMode.Day)
         {
             ScheduleViewControl.Events = ViewModel.Events;
@@ -118,7 +148,6 @@ public sealed partial class CalendarPage : Page
             MonthViewControl.SelectedDate = ViewModel.SelectedDate;
         }
 
-        // Highlight active view switcher button
         UpdateViewSwitcherStyle();
     }
 

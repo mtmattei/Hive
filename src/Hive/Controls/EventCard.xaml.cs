@@ -26,9 +26,16 @@ public sealed partial class EventCard : UserControl
     public Visibility IsTimedEvent => Event?.IsAllDay == false
         ? Visibility.Visible : Visibility.Collapsed;
 
+    public event EventHandler<CalendarEvent>? EventTapped;
+
     public EventCard()
     {
         InitializeComponent();
+        Tapped += (_, _) =>
+        {
+            if (Event is not null)
+                EventTapped?.Invoke(this, Event);
+        };
     }
 
     private static void OnEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

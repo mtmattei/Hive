@@ -44,6 +44,41 @@ public sealed partial class TasksPage : Page
         }
     }
 
+    private async void OnEditTask(TaskItem task)
+    {
+        var dialog = new AddTaskDialog(ViewModel.Profiles.ToList(), FamilyId)
+        {
+            XamlRoot = XamlRoot,
+        };
+        dialog.LoadTask(task);
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary && dialog.Result is not null)
+        {
+            await ViewModel.UpdateTaskAsync(dialog.Result, dialog.SelectedProfileIds);
+            UpdateUI();
+        }
+    }
+
+    private async void OnDeleteTask(TaskItem task)
+    {
+        var confirm = new ContentDialog
+        {
+            Title = "Delete Task",
+            Content = $"Delete \"{task.Title}\"? This cannot be undone.",
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = XamlRoot,
+        };
+
+        if (await confirm.ShowAsync() == ContentDialogResult.Primary)
+        {
+            await ViewModel.DeleteTaskCommand.ExecuteAsync(task.Id);
+            UpdateUI();
+        }
+    }
+
     private void UpdateUI()
     {
         DateLabel.Text = ViewModel.SelectedDate.ToString("dddd, MMMM d, yyyy");
@@ -99,7 +134,7 @@ public sealed partial class TasksPage : Page
         var starText = new TextBlock
         {
             Style = (Style)Resources["SmallLabelStyle"],
-            Text = $"⭐ {profile.StarBalance}",
+            Text = $"\u2b50 {profile.StarBalance}",
         };
         Grid.SetColumn(starText, 2);
         headerGrid.Children.Add(starText);
@@ -132,6 +167,7 @@ public sealed partial class TasksPage : Page
                         new TaskCompletionRequest(t.Id, profile.Id));
                     UpdateUI();
                 };
+                taskControl.TaskTapped += (_, t) => OnEditTask(t);
                 stack.Children.Add(taskControl);
             }
         }
@@ -162,6 +198,7 @@ public sealed partial class TasksPage : Page
                         new TaskCompletionRequest(t.Id, profile.Id, routine.RoutineTimeOfDay));
                     UpdateUI();
                 };
+                taskControl.TaskTapped += (_, t) => OnEditTask(t);
                 stack.Children.Add(taskControl);
             }
         }

@@ -1,0 +1,88 @@
+<Page
+    x:Class="Hive.Views.ProfileDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Hive.Converters"
+    Background="{StaticResource StoneBrush}">
+
+    <Page.Resources>
+        <converters:HexColorToBrushConverter x:Key="HexToBrush" />
+    </Page.Resources>
+
+    <Grid Padding="24,20" MaxWidth="600" HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Click="OnBack" Style="{StaticResource SecondaryButtonStyle}"
+                    Padding="8,6" MinHeight="32" MinWidth="32"
+                    AutomationProperties.Name="Go back">
+                <FontIcon Glyph="&#xE72B;" FontSize="14" />
+            </Button>
+
+            <TextBlock Grid.Column="1" x:Name="PageTitle" Text="Profile"
+                       Style="{StaticResource PageTitleStyle}"
+                       Margin="16,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="20">
+
+                <!-- Profile card -->
+                <Border Style="{StaticResource CardStyle}">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="AvatarBorder" Width="64" Height="64" CornerRadius="32">
+                            <TextBlock x:Name="AvatarEmoji" FontSize="28"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                            <TextBlock x:Name="NameText" Style="{StaticResource SectionHeadingStyle}" FontSize="22" />
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="Stars:" Style="{StaticResource BodySecondaryStyle}" />
+                                <TextBlock x:Name="StarText" Style="{StaticResource BodySemiBoldStyle}"
+                                           Foreground="{StaticResource OchreBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Upcoming events -->
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Upcoming Events" Style="{StaticResource SectionHeadingStyle}" />
+                        <StackPanel x:Name="EventsPanel" Spacing="6" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Assigned tasks -->
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Assigned Tasks" Style="{StaticResource SectionHeadingStyle}" />
+                        <StackPanel x:Name="TasksPanel" Spacing="6" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Available rewards -->
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Available Rewards" Style="{StaticResource SectionHeadingStyle}" />
+                        <StackPanel x:Name="RewardsPanel" Spacing="6" />
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

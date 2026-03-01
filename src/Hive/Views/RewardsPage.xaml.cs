@@ -44,6 +44,41 @@ public sealed partial class RewardsPage : Page
         }
     }
 
+    private async void OnEditReward(Reward reward)
+    {
+        var dialog = new AddRewardDialog(ViewModel.Profiles.ToList(), FamilyId)
+        {
+            XamlRoot = XamlRoot,
+        };
+        dialog.LoadReward(reward);
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary && dialog.Result is not null)
+        {
+            await ViewModel.UpdateRewardAsync(dialog.Result, dialog.SelectedProfileIds);
+            UpdateUI();
+        }
+    }
+
+    private async void OnDeleteReward(Reward reward)
+    {
+        var confirm = new ContentDialog
+        {
+            Title = "Delete Reward",
+            Content = $"Delete \"{reward.Title}\"? This cannot be undone.",
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = XamlRoot,
+        };
+
+        if (await confirm.ShowAsync() == ContentDialogResult.Primary)
+        {
+            await ViewModel.DeleteRewardCommand.ExecuteAsync(reward.Id);
+            UpdateUI();
+        }
+    }
+
     private void UpdateUI()
     {
         EmptyState.Visibility = ViewModel.State == ViewState.Empty
@@ -103,7 +138,7 @@ public sealed partial class RewardsPage : Page
             Spacing = 4,
             VerticalAlignment = VerticalAlignment.Center,
         };
-        starPanel.Children.Add(new TextBlock { Text = "⭐", FontSize = 16 });
+        starPanel.Children.Add(new TextBlock { Text = "\u2b50", FontSize = 16 });
         starPanel.Children.Add(new TextBlock
         {
             Text = profile.StarBalance.ToString(),
@@ -132,6 +167,7 @@ public sealed partial class RewardsPage : Page
                         new RedeemRequest(r.Id, profile.Id));
                     UpdateUI();
                 };
+                card.EditClicked += (_, r) => OnEditReward(r);
                 section.Children.Add(card);
             }
         }

@@ -1,0 +1,58 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═══════════════════════════════════════════════════
+         COSTA DESIGN SYSTEM — Dark Mode Overrides
+         Same Mediterranean palette, adapted for dark surfaces.
+         ═══════════════════════════════════════════════════ -->
+
+    <!-- Surfaces (dark) -->
+    <Color x:Key="Stone">#1A1A1E</Color>
+    <Color x:Key="White">#242428</Color>
+    <Color x:Key="Sand">#2A2A2E</Color>
+
+    <!-- Text (inverted for dark) -->
+    <Color x:Key="TextPrimary">#EAEAEA</Color>
+    <Color x:Key="TextSecondary">#A0A0A0</Color>
+    <Color x:Key="TextTertiary">#6A6A6A</Color>
+
+    <!-- Borders (darker) -->
+    <Color x:Key="Border">#3A3A3E</Color>
+    <Color x:Key="BorderLight">#2E2E32</Color>
+
+    <!-- Primary colors stay the same but slightly brightened -->
+    <Color x:Key="Sea">#3498B8</Color>
+    <Color x:Key="SeaDeep">#1B6B93</Color>
+    <Color x:Key="SeaLight">#1A2F38</Color>
+    <Color x:Key="SeaWash">#1A2530</Color>
+
+    <!-- Accent stays warm -->
+    <Color x:Key="Terra">#D46B52</Color>
+    <Color x:Key="TerraLight">#2E1E1A</Color>
+
+    <!-- Semantic (slightly brighter) -->
+    <Color x:Key="Olive">#7FAE5E</Color>
+    <Color x:Key="Ochre">#E4A24A</Color>
+    <Color x:Key="Purple">#9B7EC7</Color>
+
+    <!-- ═══ Dark Brushes ═══ -->
+    <SolidColorBrush x:Key="StoneBrush" Color="{StaticResource Stone}" />
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}" />
+    <SolidColorBrush x:Key="SandBrush" Color="{StaticResource Sand}" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="{StaticResource TextTertiary}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource Border}" />
+    <SolidColorBrush x:Key="BorderLightBrush" Color="{StaticResource BorderLight}" />
+    <SolidColorBrush x:Key="SeaBrush" Color="{StaticResource Sea}" />
+    <SolidColorBrush x:Key="SeaDeepBrush" Color="{StaticResource SeaDeep}" />
+    <SolidColorBrush x:Key="SeaLightBrush" Color="{StaticResource SeaLight}" />
+    <SolidColorBrush x:Key="SeaWashBrush" Color="{StaticResource SeaWash}" />
+    <SolidColorBrush x:Key="TerraBrush" Color="{StaticResource Terra}" />
+    <SolidColorBrush x:Key="TerraLightBrush" Color="{StaticResource TerraLight}" />
+    <SolidColorBrush x:Key="OliveBrush" Color="{StaticResource Olive}" />
+    <SolidColorBrush x:Key="OchreBrush" Color="{StaticResource Ochre}" />
+    <SolidColorBrush x:Key="PurpleBrush" Color="{StaticResource Purple}" />
+
+</ResourceDictionary>

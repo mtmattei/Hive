@@ -27,6 +27,7 @@ public sealed partial class TaskItemControl : UserControl
     }
 
     public event EventHandler<TaskItem>? CompletionToggled;
+    public event EventHandler<TaskItem>? TaskTapped;
 
     public TaskItemControl()
     {
@@ -66,5 +67,11 @@ public sealed partial class TaskItemControl : UserControl
     {
         if (Task is not null)
             CompletionToggled?.Invoke(this, Task);
+    }
+
+    private void OnTitleTapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    {
+        if (Task is not null)
+            TaskTapped?.Invoke(this, Task);
     }
 }

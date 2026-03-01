@@ -1,4 +1,6 @@
+using Hive.Core.Models;
 using Hive.Dialogs;
+using Hive.Services;
 using Hive.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -43,6 +45,27 @@ public sealed partial class SettingsPage : Page
         {
             await ViewModel.CreateProfileAsync(dialog.Result);
             ProfilesRepeater.ItemsSource = ViewModel.Profiles;
+        }
+    }
+
+    private void OnDarkModeToggled(object sender, RoutedEventArgs e)
+    {
+        var themeService = App.Services.GetRequiredService<ThemeService>();
+        themeService.SetTheme(ViewModel.IsDarkMode
+            ? ElementTheme.Dark
+            : ElementTheme.Light);
+    }
+
+    private async void OnSyncIcs(object sender, RoutedEventArgs e)
+    {
+        await ViewModel.SyncIcsCalendarCommand.ExecuteAsync(null);
+    }
+
+    private void OnViewProfile(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is Profile profile)
+        {
+            Frame.Navigate(typeof(ProfileDetailPage), profile);
         }
     }
 }

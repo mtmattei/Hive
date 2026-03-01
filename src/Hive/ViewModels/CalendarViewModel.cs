@@ -12,7 +12,6 @@ public partial class CalendarViewModel : ObservableObject
     private readonly ICalendarService _calendarService;
     private readonly IProfileService _profileService;
 
-    // Use the demo family account ID for MVP
     private readonly Guid _familyAccountId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
     [ObservableProperty] private ViewState _state = ViewState.Loading;
@@ -136,6 +135,13 @@ public partial class CalendarViewModel : ObservableObject
         await LoadEventsAsync();
     }
 
+    public async Task UpdateEventAsync(CalendarEvent evt)
+    {
+        evt.FamilyAccountId = _familyAccountId;
+        await _calendarService.UpdateEventAsync(evt);
+        await LoadEventsAsync();
+    }
+
     [RelayCommand]
     private async Task DeleteEventAsync(Guid eventId)
     {
@@ -143,6 +149,9 @@ public partial class CalendarViewModel : ObservableObject
         SelectedEvent = null;
         await LoadEventsAsync();
     }
+
+    public async Task<CalendarEvent?> GetEventByIdAsync(Guid eventId) =>
+        await _calendarService.GetEventByIdAsync(eventId);
 
     private (DateTimeOffset Start, DateTimeOffset End) GetDateRange()
     {
@@ -156,11 +165,9 @@ public partial class CalendarViewModel : ObservableObject
         };
     }
 
-    // Grouped events by day for Schedule/Day views
     public IEnumerable<IGrouping<DateOnly, CalendarEvent>> EventsByDay =>
         Events.GroupBy(e => e.StartTime.ToDateOnly()).OrderBy(g => g.Key);
 
-    // Events for a specific day in Month view
     public IEnumerable<CalendarEvent> GetEventsForDay(DateOnly date) =>
         Events.Where(e => e.StartTime.ToDateOnly() == date);
 }

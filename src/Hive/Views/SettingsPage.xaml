@@ -14,7 +14,18 @@
 
             <TextBlock Text="Settings" Style="{StaticResource PageTitleStyle}" />
 
-            <!-- ═══ Calendar Display ═══ -->
+            <!-- Appearance -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Appearance" Style="{StaticResource SectionHeadingStyle}" />
+                    <ToggleSwitch Header="Dark mode"
+                                  IsOn="{x:Bind ViewModel.IsDarkMode, Mode=TwoWay}"
+                                  Toggled="OnDarkModeToggled"
+                                  AutomationProperties.Name="Toggle dark mode" />
+                </StackPanel>
+            </Border>
+
+            <!-- Calendar Display -->
             <Border Style="{StaticResource CardStyle}">
                 <StackPanel Spacing="16">
                     <TextBlock Text="Calendar Display" Style="{StaticResource SectionHeadingStyle}" />
@@ -27,7 +38,8 @@
                         <TextBlock Grid.Column="0" Text="Start week on" Style="{StaticResource BodyStyle}"
                                    VerticalAlignment="Center" />
                         <ComboBox Grid.Column="1" x:Name="StartWeekCombo" Width="120"
-                                  SelectedIndex="{x:Bind ViewModel.StartWeekOnIndex, Mode=TwoWay}">
+                                  SelectedIndex="{x:Bind ViewModel.StartWeekOnIndex, Mode=TwoWay}"
+                                  AutomationProperties.Name="Start week on day">
                             <ComboBoxItem Content="Sunday" />
                             <ComboBoxItem Content="Monday" />
                         </ComboBox>
@@ -42,35 +54,69 @@
                                    VerticalAlignment="Center" />
                         <NumberBox Grid.Column="1" x:Name="ScheduleDaysBox" Width="80"
                                    Minimum="1" Maximum="7" SpinButtonPlacementMode="Compact"
-                                   Value="{x:Bind ViewModel.ScheduleViewDays, Mode=TwoWay}" />
+                                   Value="{x:Bind ViewModel.ScheduleViewDays, Mode=TwoWay}"
+                                   AutomationProperties.Name="Schedule view days" />
                     </Grid>
 
                     <ToggleSwitch Header="Start on current day"
-                                  IsOn="{x:Bind ViewModel.StartOnCurrentDay, Mode=TwoWay}" />
+                                  IsOn="{x:Bind ViewModel.StartOnCurrentDay, Mode=TwoWay}"
+                                  AutomationProperties.Name="Start on current day" />
 
                     <ToggleSwitch Header="Dim past events"
-                                  IsOn="{x:Bind ViewModel.DimPastEvents, Mode=TwoWay}" />
+                                  IsOn="{x:Bind ViewModel.DimPastEvents, Mode=TwoWay}"
+                                  AutomationProperties.Name="Dim past events" />
 
                     <ToggleSwitch Header="Shade weekends"
-                                  IsOn="{x:Bind ViewModel.ShadeWeekends, Mode=TwoWay}" />
+                                  IsOn="{x:Bind ViewModel.ShadeWeekends, Mode=TwoWay}"
+                                  AutomationProperties.Name="Shade weekends" />
 
                     <ToggleSwitch Header="Preview chores in calendar"
-                                  IsOn="{x:Bind ViewModel.PreviewChoresInCalendar, Mode=TwoWay}" />
+                                  IsOn="{x:Bind ViewModel.PreviewChoresInCalendar, Mode=TwoWay}"
+                                  AutomationProperties.Name="Preview chores in calendar" />
                 </StackPanel>
             </Border>
 
-            <!-- ═══ Parental Lock ═══ -->
+            <!-- Parental Lock -->
             <Border Style="{StaticResource CardStyle}">
                 <StackPanel Spacing="16">
                     <TextBlock Text="Parental Lock" Style="{StaticResource SectionHeadingStyle}" />
                     <ToggleSwitch Header="Enable parental lock"
-                                  IsOn="{x:Bind ViewModel.ParentalLockEnabled, Mode=TwoWay}" />
+                                  IsOn="{x:Bind ViewModel.ParentalLockEnabled, Mode=TwoWay}"
+                                  AutomationProperties.Name="Enable parental lock" />
                     <TextBlock Text="When enabled, a PIN is required to add, edit, or delete content."
                                Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
 
-            <!-- ═══ Profiles ═══ -->
+            <!-- Calendar Sync -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Calendar Sync" Style="{StaticResource SectionHeadingStyle}" />
+                    <TextBlock Text="Import events from an external calendar via ICS URL."
+                               Style="{StaticResource BodySecondaryStyle}" TextWrapping="Wrap" />
+
+                    <TextBox x:Name="IcsUrlInput" Header="ICS Feed URL"
+                             PlaceholderText="https://calendar.google.com/..."
+                             Text="{x:Bind ViewModel.SyncIcsUrl, Mode=TwoWay}"
+                             AutomationProperties.Name="ICS feed URL" />
+
+                    <Button Click="OnSyncIcs" Style="{StaticResource SecondaryButtonStyle}"
+                            Padding="16,8"
+                            AutomationProperties.Name="Sync calendar feed">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE72C;" FontSize="14" />
+                            <TextBlock Text="Sync Now" FontSize="13" />
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock x:Name="SyncStatus"
+                               Text="{x:Bind ViewModel.SyncStatusMessage, Mode=OneWay}"
+                               Style="{StaticResource BodySecondaryStyle}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Profiles -->
             <Border Style="{StaticResource CardStyle}">
                 <StackPanel Spacing="16">
                     <Grid>
@@ -80,7 +126,8 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Profiles" Style="{StaticResource SectionHeadingStyle}" />
                         <Button Grid.Column="1" Click="OnAddProfile" Style="{StaticResource SecondaryButtonStyle}"
-                                Padding="10,4" MinHeight="28">
+                                Padding="10,4" MinHeight="28"
+                                AutomationProperties.Name="Add profile">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <FontIcon Glyph="&#xE710;" FontSize="12" />
                                 <TextBlock Text="Add" FontSize="12" />
@@ -108,9 +155,11 @@
                                     <TextBlock Grid.Column="1" Text="{Binding Name}"
                                                Style="{StaticResource BodySemiBoldStyle}"
                                                VerticalAlignment="Center" />
-                                    <Button Grid.Column="2" Background="Transparent" BorderThickness="0"
-                                            Padding="4" MinWidth="0" MinHeight="0">
-                                        <FontIcon Glyph="&#xE712;" FontSize="14"
+                                    <Button Grid.Column="2" Click="OnViewProfile" Tag="{Binding}"
+                                            Background="Transparent" BorderThickness="0"
+                                            Padding="4" MinWidth="0" MinHeight="0"
+                                            AutomationProperties.Name="View profile details">
+                                        <FontIcon Glyph="&#xE76C;" FontSize="14"
                                                   Foreground="{StaticResource TextTertiaryBrush}" />
                                     </Button>
                                 </Grid>
@@ -122,7 +171,8 @@
 
             <!-- Save button -->
             <Button Click="OnSave" Style="{StaticResource PrimaryButtonStyle}"
-                    Content="Save Settings" HorizontalAlignment="Stretch" />
+                    Content="Save Settings" HorizontalAlignment="Stretch"
+                    AutomationProperties.Name="Save settings" />
 
         </StackPanel>
     </ScrollViewer>
