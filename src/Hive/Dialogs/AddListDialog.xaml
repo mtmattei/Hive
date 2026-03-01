@@ -1,0 +1,30 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.AddListDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add List"
+    PrimaryButtonText="Add"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <StackPanel Spacing="16" MinWidth="360">
+
+        <!-- Title -->
+        <TextBox x:Name="TitleInput" Header="List name" PlaceholderText="My list" />
+
+        <!-- Type -->
+        <ComboBox x:Name="TypeCombo" Header="Type" SelectedIndex="0"
+                  HorizontalAlignment="Stretch">
+            <ComboBoxItem Content="To-Do" />
+            <ComboBoxItem Content="Grocery" />
+        </ComboBox>
+
+        <!-- Color -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Color" Style="{StaticResource SmallLabelStyle}" />
+            <StackPanel x:Name="ColorRow" Orientation="Horizontal" Spacing="6" />
+        </StackPanel>
+
+    </StackPanel>
+</ContentDialog>

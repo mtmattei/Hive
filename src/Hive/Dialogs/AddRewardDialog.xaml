@@ -1,0 +1,48 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.AddRewardDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add Reward"
+    PrimaryButtonText="Add"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <StackPanel Spacing="16" MinWidth="400">
+
+        <!-- Title -->
+        <TextBox x:Name="TitleInput" Header="Reward title" PlaceholderText="Ice cream trip" />
+
+        <!-- Description -->
+        <TextBox x:Name="DescriptionInput" Header="Description (optional)"
+                 PlaceholderText="Pick any flavor!" />
+
+        <!-- Emoji -->
+        <TextBox x:Name="EmojiInput" Header="Emoji" PlaceholderText="🏆"
+                 MaxLength="4" Width="80" HorizontalAlignment="Left" />
+
+        <!-- Star cost -->
+        <NumberBox x:Name="StarCostBox" Header="Star cost"
+                   Value="50" Minimum="1" Maximum="500"
+                   SpinButtonPlacementMode="Compact" />
+
+        <!-- Renew toggle -->
+        <ToggleSwitch x:Name="RenewToggle" Header="Renew after redemption" IsOn="True" />
+
+        <!-- Assign to profiles -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Available for" Style="{StaticResource SmallLabelStyle}" />
+            <ItemsRepeater x:Name="ProfileCheckList">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" Spacing="4" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Name}" Tag="{Binding Id}" IsChecked="True" />
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </StackPanel>
+
+    </StackPanel>
+</ContentDialog>

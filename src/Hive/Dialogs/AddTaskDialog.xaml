@@ -1,0 +1,89 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.AddTaskDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Hive.Controls"
+    xmlns:converters="using:Hive.Converters"
+    Title="Add Task"
+    PrimaryButtonText="Add"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <ContentDialog.Resources>
+        <converters:HexColorToBrushConverter x:Key="HexToBrush" />
+    </ContentDialog.Resources>
+
+    <StackPanel Spacing="16" MinWidth="400">
+
+        <!-- Title -->
+        <TextBox x:Name="TitleInput" Header="Title" PlaceholderText="Task name" />
+
+        <!-- Emoji -->
+        <TextBox x:Name="EmojiInput" Header="Emoji (optional)" PlaceholderText="📋"
+                 MaxLength="4" Width="80" HorizontalAlignment="Left" />
+
+        <!-- Task type toggle -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Type" Style="{StaticResource SmallLabelStyle}" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <RadioButton x:Name="ChoreRadio" Content="Chore" IsChecked="True"
+                             GroupName="TaskType" Checked="OnTypeChanged" />
+                <RadioButton x:Name="RoutineRadio" Content="Routine"
+                             GroupName="TaskType" Checked="OnTypeChanged" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Assign to profiles (multi-select) -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Assign to" Style="{StaticResource SmallLabelStyle}" />
+            <ItemsRepeater x:Name="ProfileCheckList">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Vertical" Spacing="4" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Name}" Tag="{Binding Id}" IsChecked="True" />
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </StackPanel>
+
+        <!-- Chore-specific: due date -->
+        <StackPanel x:Name="ChoreOptions" Spacing="12">
+            <CalendarDatePicker x:Name="DueDatePicker" Header="Due date (optional)"
+                                HorizontalAlignment="Stretch" />
+            <TimePicker x:Name="DueTimePicker" Header="Due time (optional)" />
+            <controls:RecurrenceEditor x:Name="ChoreRecurrenceControl" />
+        </StackPanel>
+
+        <!-- Routine-specific: time of day + days -->
+        <StackPanel x:Name="RoutineOptions" Visibility="Collapsed" Spacing="12">
+            <ComboBox x:Name="TimeOfDayCombo" Header="Time of day" SelectedIndex="0"
+                      HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="Morning" />
+                <ComboBoxItem Content="Afternoon" />
+                <ComboBoxItem Content="Evening" />
+            </ComboBox>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Days (leave unchecked for daily)" Style="{StaticResource SmallLabelStyle}" />
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <ToggleButton x:Name="RoutineSun" Content="S" Width="36" Height="36" CornerRadius="18" />
+                    <ToggleButton x:Name="RoutineMon" Content="M" Width="36" Height="36" CornerRadius="18" />
+                    <ToggleButton x:Name="RoutineTue" Content="T" Width="36" Height="36" CornerRadius="18" />
+                    <ToggleButton x:Name="RoutineWed" Content="W" Width="36" Height="36" CornerRadius="18" />
+                    <ToggleButton x:Name="RoutineThu" Content="T" Width="36" Height="36" CornerRadius="18" />
+                    <ToggleButton x:Name="RoutineFri" Content="F" Width="36" Height="36" CornerRadius="18" />
+                    <ToggleButton x:Name="RoutineSat" Content="S" Width="36" Height="36" CornerRadius="18" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Star value -->
+        <NumberBox x:Name="StarValueBox" Header="Stars earned on completion"
+                   Value="0" Minimum="0" Maximum="500"
+                   SpinButtonPlacementMode="Compact" />
+
+    </StackPanel>
+</ContentDialog>

@@ -86,4 +86,11 @@ public partial class SettingsViewModel : ObservableObject
         var profiles = await _profileService.GetProfilesAsync(_familyAccountId);
         Profiles = new ObservableCollection<Profile>(profiles);
     }
+
+    public async Task CreateProfileAsync(Profile profile)
+    {
+        await _profileService.CreateProfileAsync(profile);
+        var profiles = await _profileService.GetProfilesAsync(_familyAccountId);
+        Profiles = new ObservableCollection<Profile>(profiles);
+    }
 }

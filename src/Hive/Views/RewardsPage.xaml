@@ -29,49 +29,9 @@
             </Button>
         </Grid>
 
-        <!-- Per-profile reward sections -->
+        <!-- Per-profile reward sections (built programmatically) -->
         <ScrollViewer Grid.Row="1">
-            <ItemsRepeater x:Name="ProfileRewardsRepeater">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical" Spacing="24" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Spacing="12">
-                            <!-- Profile header with star balance -->
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16"
-                                        Background="{Binding Color, Converter={StaticResource HexToBrush}}"
-                                        Margin="0,0,12,0">
-                                    <TextBlock Text="{Binding Name, Converter={StaticResource HexToBrush}}"
-                                               Foreground="White" FontSize="14" FontWeight="Bold"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                </Border>
-                                <TextBlock Grid.Column="1" Text="{Binding Name}"
-                                           Style="{StaticResource SectionHeadingStyle}"
-                                           VerticalAlignment="Center" />
-                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                                    <TextBlock Text="⭐" FontSize="16" />
-                                    <TextBlock Text="{Binding StarBalance}"
-                                               Style="{StaticResource BodySemiBoldStyle}"
-                                               Foreground="{StaticResource OchreBrush}" />
-                                </StackPanel>
-                            </Grid>
-
-                            <!-- Reward cards placeholder -->
-                            <TextBlock Text="No rewards set up yet"
-                                       Style="{StaticResource BodySecondaryStyle}"
-                                       Margin="44,0,0,0" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
+            <StackPanel x:Name="ProfileRewardsPanel" Spacing="24" />
         </ScrollViewer>
 
         <!-- Empty state -->

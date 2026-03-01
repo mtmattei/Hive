@@ -36,47 +36,8 @@
 
         <!-- Task columns per profile (horizontal scroll) -->
         <ScrollViewer Grid.Row="1" HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollMode="Disabled">
-            <ItemsRepeater x:Name="ProfileColumnsRepeater">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Horizontal" Spacing="16" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate>
-                        <!-- Per-profile task column -->
-                        <Border Style="{StaticResource CardStyle}" Width="280" VerticalAlignment="Stretch">
-                            <StackPanel Spacing="12">
-                                <!-- Profile header -->
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Column="0" Width="8" Height="8" CornerRadius="4"
-                                            Background="{Binding Color, Converter={StaticResource HexToBrush}}"
-                                            Margin="0,0,8,0" VerticalAlignment="Center" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Name}"
-                                               Style="{StaticResource SectionHeadingStyle}" />
-                                    <TextBlock Grid.Column="2"
-                                               Style="{StaticResource SmallLabelStyle}">
-                                        <Run Text="⭐" /><Run Text="{Binding StarBalance}" />
-                                    </TextBlock>
-                                </Grid>
-
-                                <Border Style="{StaticResource SeparatorStyle}" />
-
-                                <!-- Tasks will be populated per profile -->
-                                <TextBlock Text="No tasks assigned"
-                                           Style="{StaticResource BodySecondaryStyle}"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,20,0,20" />
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
+                      VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+            <StackPanel x:Name="ProfileColumnsPanel" Orientation="Horizontal" Spacing="16" />
         </ScrollViewer>
 
         <!-- Empty state -->

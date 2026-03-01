@@ -97,19 +97,19 @@
         <controls:ScheduleView
             x:Name="ScheduleViewControl"
             Grid.Row="2"
-            x:Load="True" />
+            Visibility="Visible" />
 
         <!-- Week View -->
         <controls:WeekGrid
             x:Name="WeekViewControl"
             Grid.Row="2"
-            x:Load="False" />
+            Visibility="Collapsed" />
 
         <!-- Month View -->
         <controls:MonthGrid
             x:Name="MonthViewControl"
             Grid.Row="2"
-            x:Load="False" />
+            Visibility="Collapsed" />
 
         <!-- Empty State -->
         <StackPanel Grid.Row="2"

@@ -100,4 +100,12 @@ public partial class ListsViewModel : ObservableObject
             .Where(i => ShowCompleted || !i.IsCompleted)
             .OrderBy(i => i.IsCompleted)
             .ThenBy(i => i.SortOrder) ?? [];
+
+    public async Task CreateListAsync(CustomList list)
+    {
+        list.FamilyAccountId = _familyAccountId;
+        await _listService.CreateListAsync(list);
+        await LoadListsAsync();
+        SelectedList = Lists.FirstOrDefault(l => l.Id == list.Id) ?? Lists.LastOrDefault();
+    }
 }

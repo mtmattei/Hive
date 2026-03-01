@@ -26,11 +26,12 @@ public partial class App : Application
         ConfigureServices(services);
         Services = services.BuildServiceProvider();
 
-        // Ensure database is created
+        // Ensure database is created and seeded
         using (var scope = Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<HiveDbContext>();
             db.Database.EnsureCreated();
+            SeedData.SeedAsync(db).GetAwaiter().GetResult();
         }
 
         _window = new Window();

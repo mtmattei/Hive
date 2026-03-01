@@ -129,6 +129,13 @@ public partial class CalendarViewModel : ObservableObject
         _ = LoadEventsAsync();
     }
 
+    public async Task CreateEventAsync(CalendarEvent evt)
+    {
+        evt.FamilyAccountId = _familyAccountId;
+        await _calendarService.CreateEventAsync(evt);
+        await LoadEventsAsync();
+    }
+
     [RelayCommand]
     private async Task DeleteEventAsync(Guid eventId)
     {

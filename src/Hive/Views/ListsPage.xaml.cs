@@ -1,4 +1,5 @@
 using Hive.Core.Models;
+using Hive.Dialogs;
 using Hive.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -12,6 +13,7 @@ namespace Hive.Views;
 public sealed partial class ListsPage : Page
 {
     private ListsViewModel ViewModel { get; }
+    private static readonly Guid FamilyId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
     public ListsPage()
     {
@@ -80,9 +82,19 @@ public sealed partial class ListsPage : Page
         UpdateUI();
     }
 
-    private void OnAddList(object sender, RoutedEventArgs e)
+    private async void OnAddList(object sender, RoutedEventArgs e)
     {
-        // TODO: Show add list dialog
+        var dialog = new AddListDialog(FamilyId)
+        {
+            XamlRoot = XamlRoot,
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary && dialog.Result is not null)
+        {
+            await ViewModel.CreateListAsync(dialog.Result);
+            UpdateUI();
+        }
     }
 
     private void UpdateUI()

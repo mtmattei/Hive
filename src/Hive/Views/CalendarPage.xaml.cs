@@ -1,7 +1,9 @@
+using Hive.Dialogs;
 using Hive.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace Hive.Views;
@@ -52,14 +54,24 @@ public sealed partial class CalendarPage : Page
         UpdateUI();
     }
 
-    private void OnAddEvent(object sender, RoutedEventArgs e)
+    private async void OnAddEvent(object sender, RoutedEventArgs e)
     {
-        // TODO: Show add event dialog
+        var dialog = new AddEventDialog(ViewModel.Profiles.ToList(), ViewModel.SelectedDate)
+        {
+            XamlRoot = XamlRoot,
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary && dialog.Result is not null)
+        {
+            await ViewModel.CreateEventAsync(dialog.Result);
+            UpdateUI();
+        }
     }
 
     private void UpdateUI()
     {
-        // Update header title based on view and date
+        // Update header title
         HeaderTitle.Text = ViewModel.CurrentView switch
         {
             CalendarViewMode.Day => ViewModel.SelectedDate.ToString("dddd, MMMM d"),
@@ -69,12 +81,61 @@ public sealed partial class CalendarPage : Page
             _ => ViewModel.SelectedDate.ToString("MMMM yyyy"),
         };
 
-        // Update state visibility
+        // State visibility
         LoadingRing.Visibility = ViewModel.State == ViewState.Loading ? Visibility.Visible : Visibility.Collapsed;
         LoadingRing.IsActive = ViewModel.State == ViewState.Loading;
         EmptyState.Visibility = ViewModel.State == ViewState.Empty ? Visibility.Visible : Visibility.Collapsed;
 
-        // Update profile filter
+        // Profile filter
         ProfileFilterRepeater.ItemsSource = ViewModel.Profiles;
+
+        // View switching — bind data to the active view control
+        var isSchedule = ViewModel.CurrentView == CalendarViewMode.Schedule;
+        var isWeek = ViewModel.CurrentView == CalendarViewMode.Week;
+        var isMonth = ViewModel.CurrentView == CalendarViewMode.Month;
+        // Day view reuses ScheduleView with DayCount=1
+
+        ScheduleViewControl.Visibility = (isSchedule || ViewModel.CurrentView == CalendarViewMode.Day)
+            ? Visibility.Visible : Visibility.Collapsed;
+        WeekViewControl.Visibility = isWeek ? Visibility.Visible : Visibility.Collapsed;
+        MonthViewControl.Visibility = isMonth ? Visibility.Visible : Visibility.Collapsed;
+
+        // Bind data to active view
+        if (isSchedule || ViewModel.CurrentView == CalendarViewMode.Day)
+        {
+            ScheduleViewControl.Events = ViewModel.Events;
+            ScheduleViewControl.SelectedDate = ViewModel.SelectedDate;
+            ScheduleViewControl.DayCount = ViewModel.CurrentView == CalendarViewMode.Day ? 1 : 5;
+        }
+        else if (isWeek)
+        {
+            WeekViewControl.Events = ViewModel.Events;
+            WeekViewControl.SelectedDate = ViewModel.SelectedDate;
+        }
+        else if (isMonth)
+        {
+            MonthViewControl.Events = ViewModel.Events;
+            MonthViewControl.SelectedDate = ViewModel.SelectedDate;
+        }
+
+        // Highlight active view switcher button
+        UpdateViewSwitcherStyle();
+    }
+
+    private void UpdateViewSwitcherStyle()
+    {
+        var buttons = new[] { BtnSchedule, BtnDay, BtnWeek, BtnMonth };
+        var activeTag = ViewModel.CurrentView.ToString();
+
+        foreach (var btn in buttons)
+        {
+            var isActive = (string)btn.Tag == activeTag;
+            btn.Background = isActive
+                ? (Brush)Resources["WhiteBrush"]
+                : new SolidColorBrush(Microsoft.UI.Colors.Transparent);
+            btn.FontWeight = isActive
+                ? Microsoft.UI.Text.FontWeights.Bold
+                : Microsoft.UI.Text.FontWeights.Normal;
+        }
     }
 }

@@ -1,0 +1,32 @@
+<ContentDialog
+    x:Class="Hive.Dialogs.AddProfileDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Add Profile"
+    PrimaryButtonText="Add"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnSave">
+
+    <StackPanel Spacing="16" MinWidth="360">
+
+        <!-- Name -->
+        <TextBox x:Name="NameInput" Header="Name" PlaceholderText="Profile name" />
+
+        <!-- Emoji -->
+        <TextBox x:Name="EmojiInput" Header="Emoji (optional)" PlaceholderText="👤"
+                 MaxLength="4" Width="80" HorizontalAlignment="Left" />
+
+        <!-- Color picker -->
+        <StackPanel Spacing="4">
+            <TextBlock Text="Color" Style="{StaticResource SmallLabelStyle}" />
+            <ItemsRepeater x:Name="ColorPicker">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout MinItemWidth="40" MinItemHeight="40"
+                                       MinRowSpacing="4" MinColumnSpacing="4" />
+                </ItemsRepeater.Layout>
+            </ItemsRepeater>
+        </StackPanel>
+
+    </StackPanel>
+</ContentDialog>

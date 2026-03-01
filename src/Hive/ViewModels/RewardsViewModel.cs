@@ -95,6 +95,19 @@ public partial class RewardsViewModel : ObservableObject
         var profile = Profiles.FirstOrDefault(p => p.Id == profileId);
         return profile is not null && profile.StarBalance >= reward.StarCost;
     }
+
+    public async Task CreateRewardAsync(Reward reward, IReadOnlyList<Guid> profileIds)
+    {
+        reward.FamilyAccountId = _familyAccountId;
+        reward.EligibleProfiles = profileIds.Select(pid => new RewardEligibility
+        {
+            Id = Guid.NewGuid(),
+            ProfileId = pid,
+        }).ToList();
+
+        await _rewardService.CreateRewardAsync(reward);
+        await LoadRewardsAsync();
+    }
 }
 
 public record RedeemRequest(Guid RewardId, Guid ProfileId);

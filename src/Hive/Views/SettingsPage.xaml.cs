@@ -1,3 +1,4 @@
+using Hive.Dialogs;
 using Hive.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -9,6 +10,7 @@ namespace Hive.Views;
 public sealed partial class SettingsPage : Page
 {
     public SettingsViewModel ViewModel { get; }
+    private static readonly Guid FamilyId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
     public SettingsPage()
     {
@@ -29,8 +31,18 @@ public sealed partial class SettingsPage : Page
         await ViewModel.SaveSettingsCommand.ExecuteAsync(null);
     }
 
-    private void OnAddProfile(object sender, RoutedEventArgs e)
+    private async void OnAddProfile(object sender, RoutedEventArgs e)
     {
-        // TODO: Show add profile dialog
+        var dialog = new AddProfileDialog(FamilyId)
+        {
+            XamlRoot = XamlRoot,
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary && dialog.Result is not null)
+        {
+            await ViewModel.CreateProfileAsync(dialog.Result);
+            ProfilesRepeater.ItemsSource = ViewModel.Profiles;
+        }
     }
 }

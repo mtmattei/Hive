@@ -105,6 +105,19 @@ public partial class TasksViewModel : ObservableObject
 
     public bool IsTaskCompleted(Guid taskId, Guid profileId) =>
         Completions.Any(c => c.TaskItemId == taskId && c.ProfileId == profileId);
+
+    public async Task CreateTaskAsync(TaskItem task, IReadOnlyList<Guid> profileIds)
+    {
+        task.FamilyAccountId = _familyAccountId;
+        task.Assignments = profileIds.Select(pid => new TaskAssignment
+        {
+            Id = Guid.NewGuid(),
+            ProfileId = pid,
+        }).ToList();
+
+        await _taskService.CreateTaskAsync(task);
+        await LoadTasksAsync();
+    }
 }
 
 public record TaskCompletionRequest(Guid TaskId, Guid ProfileId, RoutineTimeOfDay? TimeOfDay = null);
